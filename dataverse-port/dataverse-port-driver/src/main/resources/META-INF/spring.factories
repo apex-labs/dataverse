@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.apex.dataverse.port.driver.config.ConnectionPoolConfig,\
+  org.apex.dataverse.port.driver.config.ConnExchangerConfig

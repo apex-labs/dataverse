@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.apex.dataverse.port.core.config.RedisRegistryConfig,\
+  org.apex.dataverse.port.core.redis.RedisRegistryService,\
+  org.apex.dataverse.port.core.redis.RedisHealthService

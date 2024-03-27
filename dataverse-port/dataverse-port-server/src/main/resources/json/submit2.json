@@ -1,0 +1,89 @@
+{
+  "application-id": "application_1659940980868_0018",
+  "application-name": "test-spark-rest-api",
+  "application-type": "spark",
+  "application-tags": "test-spark",
+  "user": "danny",
+  "am-container-spec": {
+    "local-resources": {
+      "entry": [
+        {
+          "key": "__app__.jar",
+          "value": {
+            "resource": "hdfs://localhost:9000/spark/appJars/spark-examples_2.12-3.2.0.jar",
+            "size": 1997556,
+            "timestamp": 1659942196451,
+            "type": "FILE",
+            "visibility": "APPLICATION"
+          }
+        },
+        {
+          "key": "__spark_libs__",
+          "value": {
+            "resource": "hdfs://localhost:9000/spark/__spark_libs__.zip",
+            "size": 134217728,
+            "timestamp": 1660024525909,
+            "type": "ARCHIVE",
+            "visibility": "APPLICATION"
+          }
+        }
+      ]
+    },
+    "commands": {
+      "command": "{{JAVA_HOME}}/bin/java -server -Xmx1024m -Dspark.yarn.app.container.log.dir=<LOG_DIR> -Dspark.master=yarn -Dspark.submit.deployMode=cluster -Dspark.executor.cores=1 -Dspark.executor.memory=1g -Dspark.app.name=SparkPi org.apache.spark.deploy.yarn.ApplicationMaster --class org.apache.spark.examples.SparkPi --jar __app__.jar 1><LOG_DIR>/stdout 2><LOG_DIR>/stderr"
+    },
+    "environment": {
+      "entry": [
+        {
+          "key": "USER",
+          "value": "danny"
+        },
+        {
+          "key": "LOGNAME",
+          "value": "danny"
+        },
+        {
+          "key": "SPARK_USER",
+          "value": "danny"
+        },
+        {
+          "key": "SPARK_YARN_MODE",
+          "value": true
+        },
+        {
+          "key": "CLASSPATH",
+          "value": "$PWD:$PWD/__spark_conf__:$PWD/__spark_libs__/*:$PWD/__spark_conf__/__hadoop_conf__"
+        },
+        {
+          "key": "SPARK_DIST_CLASSPATH",
+          "value": "{{PWD}}<CPS>{{PWD}}/__app__.jar<CPS>{{PWD}}/__spark_libs__/*<CPS>$HADOOP_CONF_DIR<CPS>$HADOOP_COMMON_HOME/share/hadoop/common/*<CPS>$HADOOP_COMMON_HOME/share/hadoop/common/lib/*<CPS>$HADOOP_HDFS_HOME/share/hadoop/hdfs/*<CPS>$HADOOP_HDFS_HOME/share/hadoop/hdfs/lib/*<CPS>$HADOOP_YARN_HOME/share/hadoop/yarn/*<CPS>$HADOOP_YARN_HOME/share/hadoop/yarn/lib/*<CPS>$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*<CPS>$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*<CPS>{{PWD}}/__spark_conf__/__hadoop_conf__"
+        },
+        {
+          "key": "LOCAL_USER_DIRS",
+          "value": "/tmp/hadoop-danny/nm-local-dir/usercache/danny/"
+        }
+      ]
+    }
+  },
+  "unmanaged-AM": false,
+  "max-app-attempts": 2,
+  "resource": {
+    "memory": 1024,
+    "vCores": 1
+  },
+  "keep-containers-across-application-attempts": false,
+  "log-aggregation-context": {
+    "log-include-pattern": "file1",
+    "log-exclude-pattern": "file2",
+    "rolled-log-include-pattern": "file3",
+    "rolled-log-exclude-pattern": "file4",
+    "log-aggregation-policy-class-name": "org.apache.hadoop.yarn.server.nodemanager.containermanager.logaggregation.AllContainerLogAggregationPolicy",
+    "log-aggregation-policy-parameters": ""
+  },
+  "attempt-failures-validity-interval": 3600000,
+  "reservation-id": "reservation_1454114874_1",
+  "am-black-listing-requests": {
+    "am-black-listing-enabled": true,
+    "disable-failure-threshold": 0.01
+  }
+}

@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.3.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.apex.dtvs</groupId>
+    <artifactId>dataverse</artifactId>
+    <version>${reversion}</version>
+    <packaging>pom</packaging>
+    <name>${artifactId}</name>
+
+    <modules>
+        <!-- Core公共包 -->
+        <module>dataverse-core</module>
+
+        <!-- 网关服务 -->
+        <module>dataverse-gateway</module>
+
+        <!-- 鉴权服务 -->
+        <module>dataverse-security</module>
+
+        <!-- 微服务 -->
+        <module>dataverse-service</module>
+        <module>dataverse-service/dataverse-service-comm</module>
+        <module>dataverse-service/dataverse-admin-service</module>
+        <module>dataverse-service/dataverse-storage-comm</module>
+        <module>dataverse-service/dataverse-manage-service</module>
+
+        <!-- Port 服务 -->
+        <module>dataverse-port</module>
+        <module>dataverse-port/dataverse-port-core</module>
+        <module>dataverse-port/dataverse-port-driver</module>
+        <module>dataverse-port/dataverse-port-server</module>
+
+        <!-- 引擎服务 -->
+        <module>dataverse-engine</module>
+        <module>dataverse-engine/dataverse-spark-engine</module>
+        <module>dataverse-engine/dataverse-flink-engine</module>
+
+        <!-- Api包 -->
+        <module>dataverse-api</module>
+
+        <!-- 事件服务 -->
+        <module>dataverse-event</module>
+
+        <module>dataverse-alert</module>
+        <module>dataverse-sql</module>
+        <module>dataverse-config</module>
+        <module>dataverse-config/dataverse-hadoop-config</module>
+        <module>dataverse-config/dataverse-spark-config</module>
+        <module>dataverse-config/dataverse-hive-config</module>
+        <module>dataverse-config/dataverse-hbase-config</module>
+    </modules>
+
+    <properties>
+        <java.version>8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.target>8</maven.compiler.target>
+
+        <!-- dataverse版本 -->
+        <dataverse-port.version>${reversion}</dataverse-port.version>
+        <dataverse-core.version>${reversion}</dataverse-core.version>
+        <dataverse-service.version>${reversion}</dataverse-service.version>
+
+        <!-- 项目版本 -->
+        <reversion>1.0-SNAPSHOT</reversion>
+        <!-- netty版本 -->
+        <netty-all.version>4.1.86.Final</netty-all.version>
+        <!-- mybatis-plus 版本 -->
+        <mybatis-plus-boot-starter.version>3.1.1</mybatis-plus-boot-starter.version>
+        <mybatis-plus-generator.version>3.1.1</mybatis-plus-generator.version>
+        <!-- freemarker版本 -->
+        <freemarker.version>2.3.32</freemarker.version>
+        <!-- spark版本 -->
+        <spark.version>3.4.1</spark.version>
+        <!-- scala版本 -->
+        <scala.version>2.12.10</scala.version>
+        <!-- mysql驱动版本 -->
+        <mysql-connector-java.version>8.0.30</mysql-connector-java.version>
+        <!-- jackson版本 -->
+        <jackson-version>2.11.2</jackson-version>
+        <!-- lombok 版本 -->
+        <lombok.version>1.18.26</lombok.version>
+
+        <!-- flatten-maven-plugin插件版本 -->
+        <flatten-maven-plugin.version>1.4.1</flatten-maven-plugin.version>
+
+        <!-- springboot应用服务依赖版本  -->
+        <spring-security-oauth2.version>2.3.8.RELEASE</spring-security-oauth2.version>
+        <jasypt.version>2.1.1</jasypt.version>
+        <httpclient.version>4.5.13</httpclient.version>
+        <feign-httpclient.version>11.1</feign-httpclient.version>
+        <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
+        <spring-boot-admin.version>2.3.0</spring-boot-admin.version>
+        <swagger-annotations.version>1.5.22</swagger-annotations.version>
+        <swagger-models.version>1.5.22</swagger-models.version>
+        <orika-core.version>1.5.2</orika-core.version>
+        <janino.version>3.0.8</janino.version>
+        <spring-boot-starter-data-redis.version>2.3.3.RELEASE</spring-boot-starter-data-redis.version>
+
+        <!--   clickhource版本     -->
+        <clickhouse-jdbc.version>0.3.2</clickhouse-jdbc.version>
+        <!--   zookeeper版本     -->
+        <zookeeper.version>3.4.14</zookeeper.version>
+        <!--   jboss版本     -->
+        <jboss.version>1.4.10.Final</jboss.version>
+        <!--   protostuff版本     -->
+        <protostuff.version>1.7.2</protostuff.version>
+        <!--   netty版本     -->
+        <netty.version>4.1.35.Final</netty.version>
+        <!--   postgresql版本     -->
+        <postgresql.version>42.6.0</postgresql.version>
+        <!--   jedis版本     -->
+        <jedis.version>2.9.0</jedis.version>
+        <!--   redisson版本     -->
+        <redisson.version>3.10.1</redisson.version>
+        <!-- xxl-job -->
+        <xxl-job.version>2.4.0</xxl-job.version>
+
+        <!-- calcite -->
+        <calcite.version>1.35.0</calcite.version>
+
+        <!--  hutool        -->
+        <hutool.version>5.8.24</hutool.version>
+
+        <!--  spring alibaba nacos version      -->
+        <spring-cloud-starter-alibaba-nacos.version>2.2.2.RELEASE</spring-cloud-starter-alibaba-nacos.version>
+        <!--  spring cloud netflix version      -->
+        <spring-cloud-starter-netflix.version>2.2.2.RELEASE</spring-cloud-starter-netflix.version>
+        <spring-cloud-gateway.version>2.2.5.RELEASE</spring-cloud-gateway.version>
+        <spring-cloud-feign.version>2.2.5.RELEASE</spring-cloud-feign.version>
+
+        <swagger2.version>2.9.2</swagger2.version>
+        <knife4j.version>2.0.4</knife4j.version>
+
+        <!-- plugin -->
+        <scala-maven-plugin.version>4.8.1</scala-maven-plugin.version>
+        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+    </properties>
+
+
+    <!-- 依赖版本管理 -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- dataverse -->
+            <dependency>
+                <groupId>org.apex.dtvs</groupId>
+                <artifactId>dataverse-core</artifactId>
+                <version>${dataverse-core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apex.dtvs</groupId>
+                <artifactId>dataverse-service-comm</artifactId>
+                <version>${dataverse-service.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apex.dtvs</groupId>
+                <artifactId>dataverse-storage-comm</artifactId>
+                <version>${dataverse-service.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apex.dtvs</groupId>
+                <artifactId>dataverse-port-core</artifactId>
+                <version>${dataverse-port.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apex.dtvs</groupId>
+                <artifactId>dataverse-port-driver</artifactId>
+                <version>${dataverse-port.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apex.dtvs</groupId>
+                <artifactId>dataverse-port-service</artifactId>
+                <version>${dataverse-port.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security.oauth</groupId>
+                <artifactId>spring-security-oauth2</artifactId>
+                <version>${spring-security-oauth2.version}</version>
+            </dependency>
+            <!-- 配置文件处理器 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <version>${spring.boot.version}</version>
+                <optional>true</optional>
+            </dependency>
+            <!-- jasypt配置文件加解密 -->
+            <dependency>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-spring-boot-starter</artifactId>
+                <version>${jasypt.version}</version>
+            </dependency>
+            <!-- 监控 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <!-- 监控客户端 -->
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+                <version>${spring-boot-admin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-httpclient</artifactId>
+                <version>${feign-httpclient.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${spring-cloud-starter-alibaba-nacos.version}</version>
+            </dependency>
+            <!--配置中心客户端-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${spring-cloud-starter-alibaba-nacos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+                <version>${spring-cloud-starter-netflix.version}</version>
+            </dependency>
+
+            <!-- ProtoBuf 序列化 -->
+            <!-- https://mvnrepository.com/artifact/io.protostuff/protostuff-runtime -->
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-runtime</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/io.protostuff/protostuff-core -->
+            <dependency>
+                <groupId>io.protostuff</groupId>
+                <artifactId>protostuff-core</artifactId>
+                <version>${protostuff.version}</version>
+            </dependency>
+
+            <!-- spark -->
+            <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-core -->
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-core_2.12</artifactId>
+                <version>${spark.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-sql -->
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-sql_2.12</artifactId>
+                <version>${spark.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-launcher_2.12</artifactId>
+                <version>${spark.version}</version>
+            </dependency>
+
+            <!-- Scala -->
+            <dependency>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-library</artifactId>
+                <version>${scala.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-compiler</artifactId>
+                <version>${scala.version}</version>
+            </dependency>
+
+            <!-- netty -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty-all.version}</version>
+            </dependency>
+
+            <!-- mybatis-plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus-generator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatis-plus-generator.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${freemarker.version}</version>
+            </dependency>
+
+            <!-- mysql connection -->
+            <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
+
+            <!-- jackson -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.janino</groupId>
+                <artifactId>janino</artifactId>
+                <version>${janino.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-models</artifactId>
+                <version>${swagger-models.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ma.glasnost.orika</groupId>
+                <artifactId>orika-core</artifactId>
+                <version>${orika-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${spring-boot-starter-data-redis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-quartz</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper -->
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>${zookeeper.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.clickhouse</groupId>
+                <artifactId>clickhouse-jdbc</artifactId>
+                <version>${clickhouse-jdbc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+
+            <!-- xxl-job -->
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-job-core</artifactId>
+                <version>${xxl-job.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+
+            <!-- prometheus -->
+            <dependency>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient_spring_boot</artifactId>
+                <version>0.16.0</version>
+            </dependency>
+
+            <!-- calcite -->
+            <dependency>
+                <groupId>org.apache.calcite</groupId>
+                <artifactId>calcite-core</artifactId>
+                <version>${calcite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <!--            <version>${swagger.fox.version}</version>-->
+                <version>${swagger2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
+                <version>${spring-cloud-gateway.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+                <version>${spring-cloud-gateway.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>${spring-cloud-feign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-httpclient</artifactId>
+                <version>${feign-httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-ui</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-micro-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>aliyun</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <!--        <repository>-->
+        <!--            <id>repo1</id>-->
+        <!--            <name>repo1</name>-->
+        <!--            <url>https://repo1.maven.org/maven2/</url>-->
+        <!--        </repository>-->
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${flatten-maven-plugin.version}</version>
+                <configuration>
+                    <flattenedPomFilename>.flatten.xml</flattenedPomFilename>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten-clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

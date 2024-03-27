@@ -1,0 +1,17 @@
+{
+  "FileStatus": {
+    "accessTime": 1660024240182,
+    "blockSize": 134217728,
+    "childrenNum": 0,
+    "fileId": 17016,
+    "group": "supergroup",
+    "length": 1560782,
+    "modificationTime": 1659942196451,
+    "owner": "danny",
+    "pathSuffix": "",
+    "permission": "644",
+    "replication": 1,
+    "storagePolicy": 0,
+    "type": "FILE"
+  }
+}

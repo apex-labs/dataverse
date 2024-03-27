@@ -1,0 +1,83 @@
+<html lang="en">
+    <header>
+        <meta charset="utf-8" />
+        <script type="application/javascript">
+
+            var ws = new WebSocket("ws://localhost:19001/event")
+
+            var curNode;
+
+            /**
+             * WebSocket on open with server
+             */
+            ws.onopen = function () {
+                console.log("WebSocket on open")
+                //document.getElementById("connBtn").innerHTML = "已成功监听，点击重新监听"
+                //ws.send("event-conn")
+                alert("onopen")
+            }
+
+            var idx = 0;
+
+            /**
+             * WebSocket on message from server
+             * @param e
+             */
+            ws.onmessage = function (e) {
+
+                var eventTableBody = document.getElementById("eventTableBody");
+
+                var childTr = document.createElement("tr");
+
+                idx++;
+
+                childTr.innerHTML = "<td>" + idx + "</td><td>" + e.data + "</td>"
+
+                eventTableBody.insertBefore(childTr, curNode);
+
+                curNode = childTr;
+
+                alert(e)
+
+                //eventTableBody.appendChild(childTr);
+            }
+
+            /**
+             * WebSocket on close with server
+             * @param e
+             */
+            ws.onclose = function (e) {
+                console.log("WebSocket on close, e" + e)
+                document.getElementById("connBtn").innerHTML = "已断开监听，点击重新监听"
+            }
+
+            /**
+             * WebSocket on error with server
+             * @param e
+             */
+            ws.onerror = function (e) {
+                console.log("WebSocket on error, e" + e)
+            }
+
+            function sendMsg() {
+                var msg = document.getElementById("inputMsg").value;
+                ws.send(msg);
+            }
+        </script>
+    </header>
+    <body>
+
+    <input id="inputMsg" type="text" value="">
+    <input type="button" value="发送消息" onclick="sendMsg()">
+
+    <table class="table table-hover table-striped">
+        <thead>
+        <th>序</th>
+        <th>满足触发条件的事件列表</th>
+        </thead>
+        <tbody id="eventTableBody" style="font-size: 10px;">
+        <!-- 动态写入 -->
+        </tbody>
+    </table>
+    </body>
+</html>

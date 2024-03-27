@@ -1,0 +1,78 @@
+### 基于Hive元仓查询SQL
+POST http://localhost:18082/api/query
+Content-Type: application/json
+
+{
+  "sql":"desc medical_data.user_label"
+}
+
+### 基于Hive元仓查询SQL
+POST http://localhost:18082/api/query
+Content-Type: application/json
+
+{
+  "sql":"select name, sex, age, birth, city from medical_data.user_label limit 2000"
+}
+
+### 基于Hive元仓查询SQL
+POST http://localhost:18082/api/query
+Content-Type: application/json
+
+{
+  "sql":"select sex, count(distinct name) from medical_data.user_label group by sex limit 100"
+}
+
+### 从HDFS中查询SQL，指定存储信息
+POST http://localhost:18082/api/query
+Content-Type: application/json
+
+{
+  "sql": "select count(*) from abc",
+  "storeInfos": [
+    {
+      "tableName": "a_user",
+      "storePath": "/tmp/dataverse/a_user"
+    },
+    {
+      "tableName": "a_order",
+      "storePath": "/tmp/dataverse/a_order"
+    },
+    {
+      "tableName": "a_order_detail",
+      "storePath": "/tmp/dataverse/a_order_detail"
+    },
+    {
+      "tableName": "a_product",
+      "storePath": "/tmp/dataverse/a_product"
+    },
+    {
+      "tableName": "a_area",
+      "storePath": "/tmp/dataverse/a_area"
+    },
+    {
+      "tableName": "a_user_100w1111",
+      "storePath": "/tmp/dataverse/a_user_100W"
+    },{
+      "tableName":"abc",
+      "storePath": "/tmp/dataverse/audience_rule"
+    }
+  ]
+}
+
+### 从HDFS中查询SQL，指定存储信息
+POST http://localhost:18082/api/query
+Content-Type: application/json
+
+{
+  "sql": "select * from a_user a left join a_order b on a.user_id = b.user_id where b.order_id is not null"
+}
+
+
+### DI command
+POST http://localhost:18082/api/di
+Content-Type: application/json
+
+{
+  "query":"select * from audience_rule",
+  "storeName":"/tmp/dataverse/audience_rule"
+}

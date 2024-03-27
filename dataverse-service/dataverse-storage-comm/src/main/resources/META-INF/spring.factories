@@ -1,0 +1,15 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.apex.dataverse.config.MapperConfig,\
+  org.apex.dataverse.storage.service.impl.StorageServiceImpl,\
+  org.apex.dataverse.storage.service.impl.JdbcStorageServiceImpl,\
+  org.apex.dataverse.storage.service.impl.OdpcStorageServiceImpl,\
+  org.apex.dataverse.storage.service.impl.StorageTenantServiceImpl,\
+  org.apex.dataverse.port.service.impl.DvsPortServiceImpl,\
+  org.apex.dataverse.port.service.impl.EngineServiceImpl,\
+  org.apex.dataverse.port.service.impl.JobHistoryServiceImpl,\
+  org.apex.dataverse.port.service.impl.JobLogServiceImpl,\
+  org.apex.dataverse.port.service.impl.PortConnServiceImpl,\
+  org.apex.dataverse.port.service.impl.PortGroupServiceImpl,\
+  org.apex.dataverse.port.service.impl.StorageConnServiceImpl,\
+  org.apex.dataverse.port.service.impl.StoragePortServiceImpl,\
+  org.apex.dataverse.port.service.impl.PortEventServiceImpl

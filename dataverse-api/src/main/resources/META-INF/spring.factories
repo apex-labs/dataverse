@@ -1,0 +1,3 @@
+#org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  #org.apex.dataverse.feign.admin.AdminFeignClient,\
+  #org.apex.dataverse.feign.manage.ManageFeignClient

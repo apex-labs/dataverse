@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>dataverse</artifactId>
+        <groupId>org.apex.dtvs</groupId>
+        <version>${reversion}</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>dataverse-service-comm</artifactId>
+    <name>dataverse-service-comm</name>
+    <url>https://www.dataverse.org</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <distributionManagement>
+        <!--发布版本仓库-->
+        <repository>
+            <id>nexus3-releases</id>
+            <!--仓库地址-->
+            <url>http://mvn.cdp.market/repository/nexus3-releases/</url>
+        </repository>
+        <!--快照版本仓库-->
+        <snapshotRepository>
+            <id>nexus3-snapshots</id>
+            <!--仓库地址-->
+            <url>http://mvn.cdp.market/repository/nexus3-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <build>
+
+    </build>
+</project>

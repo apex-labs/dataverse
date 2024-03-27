@@ -1,0 +1,135 @@
+{
+  "channelId": "34d46e06",
+  "header": {
+    "magic": 120144,
+    "version": 0,
+    "serialize": 1,
+    "serialNo": -1898629414,
+    "command": 6,
+    "bodyLength": 448
+  },
+  "packet": {
+    "id": null,
+    "results": [
+      {
+        "id": 1,
+        "sql": "select a.user_id, a.user_name, a.real_name, a.gender, a.phone, a.open_id, a.card_id, a.city, o.order_id, o.total_amount, o.discount_amount, o.due_amount, o.actual_pay_amount, o.contact_name, o.contact_mobile, o.create_time, o.update_time from a_user a left join a_order o on a.user_id = o.user_id",
+        "count": 20523,
+        "message": "Will exe sql by spark.sql() ... |Will exe dataFrame.count() ... |The result count is 20523 |Will write the result DataFrame to /tmp/datavs/test/a_user_order/20230425 |Sql execute successfully and write the result to /tmp/datavs/test/a_user_order/20230425 |",
+        "tableName": null,
+        "target": "/tmp/datavs/test/a_user_order/20230425",
+        "schema": ""
+      }
+    ]
+  },
+  "commandId": null,
+  "request": false
+}
+
+{
+  "type": "struct",
+  "fields": [
+    {
+      "name": "user_id",
+      "type": "long",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "user_name",
+      "type": "string",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "real_name",
+      "type": "string",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "gender",
+      "type": "string",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "phone",
+      "type": "string",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "open_id",
+      "type": "string",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "card_id",
+      "type": "string",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "city",
+      "type": "string",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "order_id",
+      "type": "long",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "total_amount",
+      "type": "decimal(8,2)",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "discount_amount",
+      "type": "decimal(8,2)",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "due_amount",
+      "type": "decimal(8,2)",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "actual_pay_amount",
+      "type": "decimal(8,2)",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "contact_name",
+      "type": "string",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "contact_mobile",
+      "type": "string",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "create_time",
+      "type": "timestamp",
+      "nullable": true,
+      "metadata": {}
+    },
+    {
+      "name": "update_time",
+      "type": "timestamp",
+      "nullable": true,
+      "metadata": {}
+    }
+  ]
+}

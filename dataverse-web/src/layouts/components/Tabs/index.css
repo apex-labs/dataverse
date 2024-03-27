@@ -1,0 +1,51 @@
+.tabs-box {
+  background-color: var(--bg-color-1);
+}
+.tabs-box .tabs-menu {
+  position: relative;
+  width: 100%;
+}
+.tabs-box .tabs-menu .el-dropdown {
+  position: absolute;
+  top: 8px;
+  right: 13px;
+}
+.tabs-box .tabs-menu :deep(.el-tabs) .el-tabs__header {
+  box-sizing: border-box;
+  height: 40px;
+  padding: 0 10px;
+  margin: 0;
+}
+.tabs-box .tabs-menu :deep(.el-tabs) .el-tabs__header .el-tabs__nav-wrap {
+  position: absolute;
+  width: calc(100% - 110px);
+}
+.tabs-box .tabs-menu :deep(.el-tabs) .el-tabs__header .el-tabs__nav-wrap .el-tabs__nav {
+  display: flex;
+  border: none;
+}
+.tabs-box .tabs-menu :deep(.el-tabs) .el-tabs__header .el-tabs__nav-wrap .el-tabs__nav .el-tabs__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #afafaf;
+  border: none;
+}
+.tabs-box .tabs-menu :deep(.el-tabs) .el-tabs__header .el-tabs__nav-wrap .el-tabs__nav .el-tabs__item .tabs-icon {
+  margin: 1.5px 4px 0 0;
+  font-size: 15px;
+}
+.tabs-box .tabs-menu :deep(.el-tabs) .el-tabs__header .el-tabs__nav-wrap .el-tabs__nav .el-tabs__item .is-icon-close {
+  margin-top: 1px;
+}
+.tabs-box .tabs-menu :deep(.el-tabs) .el-tabs__header .el-tabs__nav-wrap .el-tabs__nav .el-tabs__item.is-active {
+  color: var(--primary-color);
+}
+.tabs-box .tabs-menu :deep(.el-tabs) .el-tabs__header .el-tabs__nav-wrap .el-tabs__nav .el-tabs__item.is-active::before {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  content: '';
+  border-bottom: 2px solid var(--primary-color) !important;
+}
