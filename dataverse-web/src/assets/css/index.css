@@ -1,7 +1,7 @@
 html {
   --primary-color: #3f68f2;
   --light-primary-color: #557cce;
-  --strong-color: #ff6b00;
+  --strong-color: #009bef;
   --bg-color-1: #ffffff;
   --bg-color-2: #fcfcfc;
   --bg-color-2-5: rgba(0, 0, 0, 0.05);
@@ -33,7 +33,7 @@ html {
 html.dark {
   --primary-color: #3f68f2;
   --light-primary-color: #557cce;
-  --strong-color: #ff6b00;
+  --strong-color: #009bef;
   --bg-color-1: #1e1f22;
   --bg-color-2: #292a2d;
   --bg-color-2-5: rgba(255, 255, 255, 0.05);
@@ -524,6 +524,21 @@ textarea::-webkit-input-placeholder {
 }
 .p0 {
   padding: 0 !important;
+}
+.fs12 {
+  font-size: 12px !important;
+}
+.fs14 {
+  font-size: 14px !important;
+}
+.fs16 {
+  font-size: 16px !important;
+}
+.fs18 {
+  font-size: 18px !important;
+}
+.fs20 {
+  font-size: 20px !important;
 }
 /* 外边距、内边距全局样式 */
 .m1 {

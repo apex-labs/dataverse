@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * @author Danny.Huo
- * @date 2024/1/20 15:13
+ * @date 2023/12/20 15:13
  * @since 0.1.0
  */
 public interface IHeartbeatService {

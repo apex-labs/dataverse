@@ -32,9 +32,7 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * https://zhuanlan.zhihu.com/p/618995585
- * https://zhuanlan.zhihu.com/p/590326915
- * https://www.dtstack.com/bbs/article/484
+ *
  * @author Danny.Huo
  * @date 2023/8/19 16:21
  * @since 0.1.0

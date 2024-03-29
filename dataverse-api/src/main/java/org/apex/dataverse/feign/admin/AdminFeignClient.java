@@ -2,7 +2,7 @@ package org.apex.dataverse.feign.admin;
 
 import org.apex.dataverse.constants.ServiceNameConstants;
 import org.apex.dataverse.param.DvsAdsTableParam;
-import org.apex.dataverse.vo.DvsAdsTableVO;
+import org.apex.dataverse.vo.DvsApiTableVO;
 import org.apex.dataverse.vo.StorageBoxFeignVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,5 +28,5 @@ public interface AdminFeignClient {
      * @return
      */
     @PostMapping("/api/dvs/admin/feign/listDvsAdsTable")
-    List<DvsAdsTableVO> listDvsAdsTable(@RequestBody DvsAdsTableParam dvsAdsTableParam);
+    List<DvsApiTableVO> listDvsAdsTable(@RequestBody DvsAdsTableParam dvsAdsTableParam);
 }

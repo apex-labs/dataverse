@@ -5,11 +5,10 @@
     </StyleProvider>
   </ConfigProvider>
   <Loading v-if="loading" />
-  <!-- <Loading /> -->
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onBeforeMount, onMounted } from 'vue'
+import { reactive, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { RouterView } from 'vue-router'
 import {
   ConfigProvider,
@@ -19,6 +18,7 @@ import {
 } from 'ant-design-vue'
 import { useAppStore } from '@/stores/modules/app'
 import Loading from "@/components/Loading.vue"
+import themeToken from '@/const/themeJson.json'
 
 const { darkAlgorithm, defaultAlgorithm, compactAlgorithm } = theme
 const darkTheme = [darkAlgorithm]
@@ -26,7 +26,6 @@ const lightTheme = [defaultAlgorithm]
 
 const appStore = useAppStore()
 const currentTheme = computed(() => appStore.theme)
-const color = ref<string>(appStore.color)
 const loading = computed(() => appStore.loading)
 onBeforeMount(() => {
   appStore.changeLoading(true)
@@ -42,13 +41,9 @@ if (currentTheme.value === 'dark') html.setAttribute('class', 'dark')
 else html.setAttribute('class', '')
 
 const themeConfig = reactive({
-  token: {
-    colorPrimary: color.value || '#234297',
-    borderRadius: 2
-  },
+  token: themeToken.token,
   algorithm: currentTheme.value === 'dark' ? darkTheme : lightTheme
 })
-
 watch(
   () => currentTheme.value,
   (v) => {

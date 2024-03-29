@@ -13,6 +13,7 @@ import org.apache.calcite.sql.parser.SqlParser;
 import org.apache.calcite.sql.parser.ddl.SqlDdlParserImpl;
 import org.apex.dataverse.constrant.SqlGrammarConst;
 import org.apex.dataverse.core.enums.CmdSet;
+import org.apex.dataverse.core.enums.EngineType;
 import org.apex.dataverse.core.exception.InvalidCmdException;
 import org.apex.dataverse.core.exception.InvalidConnException;
 import org.apex.dataverse.core.msg.Header;
@@ -190,7 +191,7 @@ public class BdmJobServiceImpl extends ServiceImpl<BdmJobMapper, BdmJob> impleme
         }
     }
 
-    private void saveBdmScript(BdmJob bdmJob,BdmJobParam bdmJobParam) throws DtvsAdminException, SqlParseException {
+    private void saveBdmScript(BdmJob bdmJob,BdmJobParam bdmJobParam) throws DtvsAdminException, SqlParseException, NoPortNodeException, InterruptedException, PortConnectionException, JsonProcessingException, InvalidConnException, InvalidCmdException {
         if (bdmJobParam.getBdmScriptParam() != null) {
             saveDdlSql(bdmJob,bdmJobParam.getBdmScriptParam());
             String bdmJobCode = bdmJobParam.getBdmJobCode();
@@ -210,30 +211,55 @@ public class BdmJobServiceImpl extends ServiceImpl<BdmJobMapper, BdmJob> impleme
         }
     }
 
-    public void saveDdlSql(BdmJob bdmJob,BdmScriptParam bdmScriptParam) throws SqlParseException, DtvsAdminException {
+    public Object saveDdlSql(BdmJob bdmJob,BdmScriptParam bdmScriptParam) throws SqlParseException, DtvsAdminException, NoPortNodeException, InterruptedException, PortConnectionException, JsonProcessingException, InvalidConnException, InvalidCmdException {
+        Object execute = null;
         String sql = processSqlContent(bdmScriptParam.getBdmScript());
         String[] split = sql.split(";");
         for (String str : split) {
             if(str.toLowerCase().contains("create table ") || str.toLowerCase().contains("drop ")){
                 //删除原先数据再新增
                 clearEditBdmJobRelation(bdmJob);
+                DataRegion dataRegion = getDataRegion(bdmJob);
+                StorageBox storageBox = getStorageBox(bdmJob,dataRegion);
                 if(str.toLowerCase().contains("create table ")){
-                    DataRegion dataRegion = getDataRegion(bdmJob);
-                    StorageBox storageBox = getStorageBox(bdmJob,dataRegion);
                     saveCreateSql(bdmJob,dataRegion,storageBox,str);
                 }
+                //执行ddl语句
+//                List<BdmOutTable> list = bdmOutTableService.list(Wrappers.<BdmOutTable>lambdaQuery().eq(BdmOutTable::getBdmJobCode, bdmJob.getBdmJobCode())
+//                        .eq(BdmOutTable::getEnv, bdmJob.getEnv()));
+//                if(!CollectionUtils.isEmpty(list)){
+//                    SqlParam sqlParam = new SqlParam();
+//                    sqlParam.setEnv(bdmJob.getEnv());
+//                    sqlParam.setSql(str);
+//                    sqlParam.setStorageId(String.valueOf(storageBox.getStorageId()));
+//
+//                    List<StoreInfo> storeInfos = new ArrayList<>();
+//                    TableStorage tableStorage = tableStorageService.getOne((Wrappers.<TableStorage>lambdaQuery().eq(TableStorage::getTableCode, list.get(0).getTableCode())
+//                            .eq(TableStorage::getEnv, list.get(0).getEnv())));
+//                    if (Objects.nonNull(tableStorage)) {
+//                        StoreInfo storeInfo = new StoreInfo();
+//                        storeInfo.setStorePath(tableStorage.getStorageName());
+//                        storeInfo.setTableName(list.get(0).getTableName());
+//                        storeInfos.add(storeInfo);
+//                    }
+//                    sqlParam.setStoreInfos(storeInfos);
+//                    execute = execute(sqlParam);
+//                }
             }else if(str.toLowerCase().contains(SqlGrammarConst.INSERT_OVERWRITE)){
-                String selectSql = str.substring(str.toLowerCase().indexOf(SqlGrammarConst.SELECT_WITH_BLANK_LOWER));
-//                解析表名并查询表信息写入 bdmInTable
+//                String selectSql = str.substring(str.toLowerCase().indexOf(SqlGrammarConst.SELECT_WITH_BLANK_LOWER));
+////                解析表名并查询表信息写入 bdmInTable
 //                List<String> tableNameList = extractTableNameList(selectSql);
 //                if(!CollectionUtils.isEmpty(tableNameList)){
 //                    for (String tableName : tableNameList) {
-//                        List<DvsTable> list = dvsTableService.list(Wrappers.<DvsTable>lambdaQuery().in(DvsTable::getTableName, tableName).eq(DvsTable::getEnv, bdmJob.getEnv()));
+//                        String[] tableStr = tableName.split(".");
+//
+//                        List<DvsTable> list = dvsTableService.list(Wrappers.<DvsTable>lambdaQuery().eq(DvsTable::getTableName, tableName).eq(DvsTable::getEnv, bdmJob.getEnv()));
 //
 //                    }
 //                }
             }
         }
+        return execute;
     }
 
     public static List<String> extractTableNameList(String sql) throws SqlParseException {
@@ -389,7 +415,7 @@ public class BdmJobServiceImpl extends ServiceImpl<BdmJobMapper, BdmJob> impleme
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public Long editBdmJob(BdmJobParam editBdmJobParam) throws DtvsAdminException, SqlParseException {
+    public Long editBdmJob(BdmJobParam editBdmJobParam) throws DtvsAdminException, SqlParseException, NoPortNodeException, InterruptedException, PortConnectionException, JsonProcessingException, InvalidConnException, InvalidCmdException {
         UserInfo userInfo = NexusUserInfoUtils.getUserInfo();
         BdmJob bdmJob = validateEditBdmJob(editBdmJobParam, userInfo);
         // 设置数据建模作业编码
@@ -742,7 +768,12 @@ public class BdmJobServiceImpl extends ServiceImpl<BdmJobMapper, BdmJob> impleme
         String tableName = "";
         SqlParser.Config sqlConfig = SqlParser.configBuilder().setParserFactory(SqlDdlParserImpl.FACTORY).build();
         SqlParser sqlParser = SqlParser.create(sql,sqlConfig);
-        SqlNode sqlNode = sqlParser.parseStmt();
+        SqlNode sqlNode = null;
+        try {
+            sqlNode = sqlParser.parseStmt();
+        } catch (SqlParseException e) {
+            throw new DtvsAdminException("SQL编写不规范，请确认编写规范并以英文分号结尾后重新保存");
+        }
         if(sqlNode.getKind().equals(SqlKind.CREATE_TABLE)){
             SqlDdl sqlDdl = (SqlDdl) sqlNode;
             SqlNodeList sqlNodes = SqlNodeList.of(sqlDdl.getOperandList().get(1));
@@ -779,13 +810,13 @@ public class BdmJobServiceImpl extends ServiceImpl<BdmJobMapper, BdmJob> impleme
         DataRegion dataRegion = getDataRegion(bdmJob);
         StorageBox storageBox = getStorageBox(bdmJob,dataRegion);
 
-        String[] split = sql.split(";");
-        sql = split[split.length - 1];
-        if(sql.indexOf("CREATE TABLE ") >= 0 || sql.indexOf("create table ") >= 0 || sql.indexOf("DROP ") >= 0 || sql.indexOf("drop ") >= 0){
-            throw new DtvsAdminException("CREATE语句无需执行，请直接保存");
-//            if(!sqlParam.getSql().contains(tableName)){
-//                throw new DtvsAdminException("目标表名需要与作业名称一致");
-//            }
+//        String[] split = sql.split(";");
+//        sql = split[split.length - 1];
+        if(sql.toLowerCase().contains("create table ") || sql.toLowerCase().contains("drop ")){
+            BdmScriptParam bdmScriptParam = new BdmScriptParam();
+            bdmScriptParam.setBdmScript(sql);
+            return saveDdlSql(bdmJob,bdmScriptParam);
+//            throw new DtvsAdminException("CREATE语句无需执行，请直接保存");
         }
         sqlParam.setSql(sql);
         sqlParam.setEnv(bdmJob.getEnv());

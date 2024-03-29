@@ -12,7 +12,7 @@ import java.io.Serializable;
 /**
  * <p>项目名称:
  *
- * <p>文件名称: com.apex.me.util.proto.ProtoBufUtil.java
+ * <p>文件名称:
  *
  * <p>描述:
  *

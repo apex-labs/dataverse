@@ -7,6 +7,7 @@ import org.apex.dataverse.enums.*;
 import org.apex.dataverse.exception.DtvsAdminException;
 import org.apex.dataverse.feign.manage.ManageFeignClient;
 import org.apex.dataverse.mapper.DvsParentMapper;
+import org.apex.dataverse.mapper.TableStorageMapper;
 import org.apex.dataverse.model.PageResult;
 import org.apex.dataverse.model.UserInfo;
 import org.apex.dataverse.param.*;
@@ -65,6 +66,9 @@ public class DvsParentServiceImpl extends ServiceImpl<DvsParentMapper, DvsParent
 
     @Autowired
     private ManageFeignClient manageFeignClient;
+
+    @Autowired
+    private TableStorageMapper tableStorageMapper;
 
     @Override
     public PageResult<DvsParentVO> pageDvsParent(PageDvsParentParam pageDvsParentParam) throws DtvsAdminException {
@@ -256,52 +260,44 @@ public class DvsParentServiceImpl extends ServiceImpl<DvsParentMapper, DvsParent
          * 单存储区，三个层（ods, dw, ads)，都在一个存储区上（三个存储区中的一个）
          * 多存储区，三个层中Ads可以在一个存储区上（三个存储区中的一个）， 非ADS层（ods, dw)在另一个存储区上
          */
-        String odsBoxCode = UCodeUtil.produce();
-        String dwBoxCode = UCodeUtil.produce();
-        String adsBoxCode = UCodeUtil.produce();
-//        dvsParentParam.getStorageBoxParamList().forEach(d -> {
-//            String[] sPaths = d.getStoragePath().split(SqlGrammarConst.SLASH);
-//            String storagePath = String.join(SqlGrammarConst.SLASH, Arrays.asList(sPaths));
-//            String boxName = storagePath + SqlGrammarConst.SLASH +
-//                    userInfo.getTenantId() + SqlGrammarConst.SLASH +
-//                    dvsParentParam.getParentName() + SqlGrammarConst.SLASH +
-//                    EnvEnum.getEnvDescByValue(d.getEnv()) + SqlGrammarConst.SLASH +
-//                    DwLayerEnum.getDwLayerDescByModel(d.getDwLayer());
-//            d.setBoxName(boxName.toLowerCase());
-//        });
-        LocalDateTime dateTime = LocalDateTime.now();
-        String dvsCode = dvsParentParam.getDvsCode();
-        List<StorageBox> storageBoxList = new ArrayList<>();
-        dvsParentParam.getStorageBoxParamList().forEach(d -> {
-            String[] sPaths = d.getStoragePath().split(SqlGrammarConst.SLASH);
-            String storagePath = String.join(SqlGrammarConst.SLASH, Arrays.asList(sPaths));
-            String boxNamePrefix = storagePath + SqlGrammarConst.SLASH +
-                    userInfo.getTenantId() + SqlGrammarConst.SLASH +
-                    dvsParentParam.getParentName() + SqlGrammarConst.SLASH;
-            if (dvsParentParam.getEnvMode().intValue() == EnvModelEnum.BAISC.getValue()) {
-                StorageBox odsStorage = buildStorageBox(d, DwLayerEnum.ODS.getValue(), EnvEnum.BAISC.getValue(), odsBoxCode, dvsCode, dateTime, boxNamePrefix);
-                StorageBox dwStorage = buildStorageBox(d, DwLayerEnum.DW.getValue(), EnvEnum.BAISC.getValue(), dwBoxCode, dvsCode, dateTime, boxNamePrefix);
-                StorageBox adsStorage = buildStorageBox(d, DwLayerEnum.ADS.getValue(), EnvEnum.BAISC.getValue(), adsBoxCode, dvsCode, dateTime, boxNamePrefix);
-                storageBoxList.add(odsStorage);
-                storageBoxList.add(dwStorage);
-                storageBoxList.add(adsStorage);
-            } else {
-                StorageBox odsStorage = buildStorageBox(d, DwLayerEnum.ODS.getValue(), EnvEnum.DEV.getValue(), odsBoxCode, dvsCode, dateTime, boxNamePrefix);
-                StorageBox dwStorage = buildStorageBox(d, DwLayerEnum.DW.getValue(), EnvEnum.DEV.getValue(), dwBoxCode, dvsCode, dateTime, boxNamePrefix);
-                StorageBox adsStorage = buildStorageBox(d, DwLayerEnum.ADS.getValue(), EnvEnum.DEV.getValue(), adsBoxCode, dvsCode, dateTime, boxNamePrefix);
-                StorageBox prodDdsStorage = buildStorageBox(d, DwLayerEnum.ODS.getValue(), EnvEnum.PROD.getValue(), odsBoxCode, dvsCode, dateTime, boxNamePrefix);
-                StorageBox prodDwStorage = buildStorageBox(d, DwLayerEnum.DW.getValue(), EnvEnum.PROD.getValue(), dwBoxCode, dvsCode, dateTime, boxNamePrefix);
-                StorageBox prodAdsStorage = buildStorageBox(d, DwLayerEnum.ADS.getValue(), EnvEnum.PROD.getValue(), adsBoxCode, dvsCode, dateTime, boxNamePrefix);
-                storageBoxList.add(odsStorage);
-                storageBoxList.add(dwStorage);
-                storageBoxList.add(adsStorage);
-                storageBoxList.add(prodDdsStorage);
-                storageBoxList.add(prodDwStorage);
-                storageBoxList.add(prodAdsStorage);
+        if (CollectionUtil.isNotEmpty(dvsParentParam.getStorageBoxParamList())) {
+            String odsBoxCode = UCodeUtil.produce();
+            String dwBoxCode = UCodeUtil.produce();
+            String adsBoxCode = UCodeUtil.produce();
+            LocalDateTime dateTime = LocalDateTime.now();
+            String dvsCode = dvsParentParam.getDvsCode();
+            List<StorageBox> storageBoxList = new ArrayList<>();
+            dvsParentParam.getStorageBoxParamList().forEach(d -> {
+                String[] sPaths = d.getStoragePath().split(SqlGrammarConst.SLASH);
+                String storagePath = String.join(SqlGrammarConst.SLASH, Arrays.asList(sPaths));
+                String boxNamePrefix = storagePath + SqlGrammarConst.SLASH +
+                        userInfo.getTenantId() + SqlGrammarConst.SLASH +
+                        dvsParentParam.getParentName() + SqlGrammarConst.SLASH;
+                if (dvsParentParam.getEnvMode().intValue() == EnvModelEnum.BAISC.getValue()) {
+                    StorageBox odsStorage = buildStorageBox(d, DwLayerEnum.ODS.getValue(), EnvEnum.BAISC.getValue(), odsBoxCode, dvsCode, dateTime, boxNamePrefix);
+                    StorageBox dwStorage = buildStorageBox(d, DwLayerEnum.DW.getValue(), EnvEnum.BAISC.getValue(), dwBoxCode, dvsCode, dateTime, boxNamePrefix);
+                    StorageBox adsStorage = buildStorageBox(d, DwLayerEnum.ADS.getValue(), EnvEnum.BAISC.getValue(), adsBoxCode, dvsCode, dateTime, boxNamePrefix);
+                    storageBoxList.add(odsStorage);
+                    storageBoxList.add(dwStorage);
+                    storageBoxList.add(adsStorage);
+                } else {
+                    StorageBox odsStorage = buildStorageBox(d, DwLayerEnum.ODS.getValue(), EnvEnum.DEV.getValue(), odsBoxCode, dvsCode, dateTime, boxNamePrefix);
+                    StorageBox dwStorage = buildStorageBox(d, DwLayerEnum.DW.getValue(), EnvEnum.DEV.getValue(), dwBoxCode, dvsCode, dateTime, boxNamePrefix);
+                    StorageBox adsStorage = buildStorageBox(d, DwLayerEnum.ADS.getValue(), EnvEnum.DEV.getValue(), adsBoxCode, dvsCode, dateTime, boxNamePrefix);
+                    StorageBox prodDdsStorage = buildStorageBox(d, DwLayerEnum.ODS.getValue(), EnvEnum.PROD.getValue(), odsBoxCode, dvsCode, dateTime, boxNamePrefix);
+                    StorageBox prodDwStorage = buildStorageBox(d, DwLayerEnum.DW.getValue(), EnvEnum.PROD.getValue(), dwBoxCode, dvsCode, dateTime, boxNamePrefix);
+                    StorageBox prodAdsStorage = buildStorageBox(d, DwLayerEnum.ADS.getValue(), EnvEnum.PROD.getValue(), adsBoxCode, dvsCode, dateTime, boxNamePrefix);
+                    storageBoxList.add(odsStorage);
+                    storageBoxList.add(dwStorage);
+                    storageBoxList.add(adsStorage);
+                    storageBoxList.add(prodDdsStorage);
+                    storageBoxList.add(prodDwStorage);
+                    storageBoxList.add(prodAdsStorage);
+                }
+            });
+            if (!storageBoxService.saveOrUpdateBatch(storageBoxList)) {
+                throw new DtvsAdminException("保存数据存储桶失败");
             }
-        });
-        if (!storageBoxService.saveOrUpdateBatch(storageBoxList)) {
-            throw new DtvsAdminException("保存数据存储桶失败");
         }
     }
 
@@ -345,6 +341,7 @@ public class DvsParentServiceImpl extends ServiceImpl<DvsParentMapper, DvsParent
         if (CollectionUtil.isNotEmpty(dvsParentParam.getDvsParamList())) {
             List<Dvs> dvsList = mapperFactory.getMapperFacade().mapAsList(dvsParentParam.getDvsParamList(), Dvs.class);
             dvsList.forEach(d -> {
+                // 空间名称 空间简称 添加后缀 _dev
                 d.setDvsCode(dvsParentParam.getDvsCode());
                 d.setIsDeleted(IsDeletedEnum.NO.getValue());
                 d.setCreateTime(LocalDateTime.now());
@@ -489,24 +486,39 @@ public class DvsParentServiceImpl extends ServiceImpl<DvsParentMapper, DvsParent
         DvsParent dvsParent = validateEditDvsParent(dvsParentParam, userInfo);
         // 编辑数据空间父类
         Long parentId = saveOrUpdateDvsParent(dvsParentParam, userInfo);
-        // 新增数据空间
+        // 编辑数据空间
         dvsParentParam.setDvsCode(dvsParent.getDvsCode());
         saveDvs(dvsParentParam, userInfo);
-        // 新增数据存储桶
-        saveStorageBox(dvsParentParam, userInfo);
+        // todo 判断空间对应的桶是否被表使用 如果使用不允许编辑
+        List<StorageBox> storageBoxList = storageBoxService.list(Wrappers.<StorageBox>lambdaQuery().eq(StorageBox::getDvsCode, dvsParent.getDvsCode()));
+        if (CollectionUtil.isNotEmpty(storageBoxList)) {
+            List<String> boxCodes = storageBoxList.stream().map(StorageBox::getBoxCode).distinct().collect(Collectors.toList());
+            List<TableStorage> tableStorageList = tableStorageMapper.selectList(Wrappers.<TableStorage>lambdaQuery().in(TableStorage::getBoxCode, boxCodes));
+            if (CollectionUtil.isEmpty(tableStorageList)) {
+                if (CollectionUtil.isNotEmpty(storageBoxList) && !storageBoxService.remove(Wrappers.<StorageBox>lambdaQuery().eq(StorageBox::getDvsCode, dvsParent.getDvsCode()))) {
+                    throw new DtvsAdminException("删除数据空间对应的存储区失败");
+                }
+                // 新增数据存储桶
+                saveStorageBox(dvsParentParam, userInfo);
+            }
+        } else {
+            // 新增数据存储桶
+            saveStorageBox(dvsParentParam, userInfo);
+        }
+
         return parentId;
     }
 
-    private DvsParent validateEditDvsParent(DvsParentParam DvsParentParam, UserInfo userInfo) throws DtvsAdminException {
+    private DvsParent validateEditDvsParent(DvsParentParam dvsParentParam, UserInfo userInfo) throws DtvsAdminException {
         DvsParent dvsParent;
-        validateAddDvsParent(DvsParentParam);
-        if (Objects.isNull(DvsParentParam.getParentId())) {
+        validateAddDvsParent(dvsParentParam);
+        if (Objects.isNull(dvsParentParam.getParentId())) {
             throw new DtvsAdminException("数据空间父类ID不能为空");
         }
-        if (Objects.isNull(dvsParent = getOne(Wrappers.<DvsParent>lambdaQuery().eq(DvsParent::getParentId, DvsParentParam.getParentId()).eq(DvsParent::getIsDeleted, IsDeletedEnum.NO.getValue())))) {
+        if (Objects.isNull(dvsParent = getOne(Wrappers.<DvsParent>lambdaQuery().eq(DvsParent::getParentId, dvsParentParam.getParentId()).eq(DvsParent::getIsDeleted, IsDeletedEnum.NO.getValue())))) {
             throw new DtvsAdminException("数据空间父类不存在");
         }
-        List<DvsParent> DvsParents = list(Wrappers.<DvsParent>lambdaQuery().eq(DvsParent::getParentName, DvsParentParam.getParentName()).
+        List<DvsParent> DvsParents = list(Wrappers.<DvsParent>lambdaQuery().eq(DvsParent::getParentName, dvsParentParam.getParentName()).
                 eq(DvsParent::getTenantId, userInfo.getTenantId()).eq(DvsParent::getIsDeleted, IsDeletedEnum.NO.getValue()));
         if (CollectionUtil.isNotEmpty(DvsParents)) {
             if (DvsParents.stream().filter(d -> !d.getParentId().equals(dvsParent.getParentId())).count() > 0) {
@@ -514,7 +526,7 @@ public class DvsParentServiceImpl extends ServiceImpl<DvsParentMapper, DvsParent
             }
         }
 
-        List<DvsParent> DvsParents2 = list(Wrappers.<DvsParent>lambdaQuery().eq(DvsParent::getParentAlias, DvsParentParam.getParentName()).
+        List<DvsParent> DvsParents2 = list(Wrappers.<DvsParent>lambdaQuery().eq(DvsParent::getParentAlias, dvsParentParam.getParentName()).
                 eq(DvsParent::getTenantId, userInfo.getTenantId()).eq(DvsParent::getIsDeleted, IsDeletedEnum.NO.getValue()));
         if (CollectionUtil.isNotEmpty(DvsParents2)) {
             if (DvsParents2.stream().filter(d -> !d.getParentId().equals(dvsParent.getParentId())).count() > 0) {
@@ -522,7 +534,7 @@ public class DvsParentServiceImpl extends ServiceImpl<DvsParentMapper, DvsParent
             }
         }
 
-        List<DvsParent> DvsParents3 = list(Wrappers.<DvsParent>lambdaQuery().eq(DvsParent::getParentAbbr, DvsParentParam.getParentName()).
+        List<DvsParent> DvsParents3 = list(Wrappers.<DvsParent>lambdaQuery().eq(DvsParent::getParentAbbr, dvsParentParam.getParentName()).
                 eq(DvsParent::getTenantId, userInfo.getTenantId()).eq(DvsParent::getIsDeleted, IsDeletedEnum.NO.getValue()));
         if (CollectionUtil.isNotEmpty(DvsParents3)) {
             if (DvsParents3.stream().filter(d -> !d.getParentId().equals(dvsParent.getParentId())).count() > 0) {
@@ -530,16 +542,11 @@ public class DvsParentServiceImpl extends ServiceImpl<DvsParentMapper, DvsParent
             }
         }
 
-        // todo 是否判断在表存储中已经使用了项目空间 如果使用是否不允许编辑
-
         // 删除旧的数据空间
         if (CollectionUtil.isNotEmpty(dvsService.list(Wrappers.<Dvs>lambdaQuery().eq(Dvs::getDvsCode, dvsParent.getDvsCode()).
                 eq(Dvs::getTenantId, userInfo.getTenantId()).eq(Dvs::getIsDeleted, IsDeletedEnum.NO.getValue()))) && !dvsService.remove(Wrappers.<Dvs>lambdaQuery().eq(Dvs::getDvsCode, dvsParent.getDvsCode()).
                 eq(Dvs::getTenantId, userInfo.getTenantId()).eq(Dvs::getIsDeleted, IsDeletedEnum.NO.getValue()))) {
             throw new DtvsAdminException("删除旧的数据空间失败");
-        }
-        if (CollectionUtil.isNotEmpty(storageBoxService.list(Wrappers.<StorageBox>lambdaQuery().eq(StorageBox::getDvsCode, dvsParent.getDvsCode()))) && !storageBoxService.remove(Wrappers.<StorageBox>lambdaQuery().eq(StorageBox::getDvsCode, dvsParent.getDvsCode()))) {
-            throw new DtvsAdminException("删除数据空间对应的存储区失败");
         }
         return dvsParent;
     }

@@ -392,7 +392,6 @@ public class DvsAdminJobScheduleHandler {
                 }
             }
             // 编辑调度实例
-            scheduleInstance.setOffset(DateUtils.localDateTimeToStr(LocalDateTime.now(), DateUtils.DATETIME_TIME_FORMATTER));
             scheduleInstance.setUpdateTime(LocalDateTime.now());
             if (CollectionUtil.isNotEmpty(saveJobInstanceList)) {
                 if (saveJobInstanceList.stream().filter(s -> Objects.nonNull(s.getExeStatus()) && (s.getExeStatus().intValue() == ExeStatusEnum.EXE_FAIL.getValue() || s.getExeStatus().intValue() == ExeStatusEnum.EXE_DONE.getValue())).count() > 0) {
@@ -411,10 +410,12 @@ public class DvsAdminJobScheduleHandler {
     }
 
     private ScheduleInstance getScheduleInstance(JobSchedule jobSchedule) {
+        LocalDateTime localDateTime = LocalDateTime.now();
         ScheduleInstance scheduleInstance = mapperFactory.getMapperFacade().map(jobSchedule, ScheduleInstance.class);
         scheduleInstance.setScheduleInstanceCode(UCodeUtil.produce() + "_" + DateUtils.localDateTimeToStr(LocalDateTime.now(), DateUtils.DATETIME_DATE_FORMATTER_YYYYMMDDHHMM));
         scheduleInstance.setExeStatus(ExeStatusEnum.EXE_DONE.getValue());
-        scheduleInstance.setCreateTime(LocalDateTime.now());
+        scheduleInstance.setCreateTime(localDateTime);
+        scheduleInstance.setOffset(DateUtils.localDateTimeToStr(localDateTime, DateUtils.DATETIME_TIME_FORMATTER));
         return scheduleInstance;
     }
 
@@ -427,6 +428,13 @@ public class DvsAdminJobScheduleHandler {
         // 任务实例结果保存
         JobInstance jobInstance = getJobInstance(nodeJobs);
         saveJobInstanceList.add(jobInstance);
+
+        // 最近的调度实例
+        JobInstance latestJobInstance = null;
+        List<JobInstance> latestJobInstances = jobInstanceService.list(Wrappers.<JobInstance>lambdaQuery().eq(JobInstance::getNodeCode, nodeJobs.getNodeCode()).eq(JobInstance::getEnv, nodeJobs.getEnv()).orderByDesc(JobInstance::getCreateTime).last(SqlGrammarConst.LIMIT_ONE));
+        if (CollectionUtil.isNotEmpty(latestJobInstances)) {
+            latestJobInstance = latestJobInstances.get(0);
+        }
 
         // 获取集成任务对应的数据源信息
         EtlJob etlJob = etlJobService.getOne(Wrappers.<EtlJob>lambdaQuery().eq(EtlJob::getEtlJobCode, etlJobCode).eq(EtlJob::getEnv, env).
@@ -491,20 +499,34 @@ public class DvsAdminJobScheduleHandler {
                     }
                 }
 
-                sql = getEtlJobSql(tableExtract, tableLoad, tableTransforms);
+                sql = getEtlJobSql(tableExtract, tableLoad, tableTransforms, latestJobInstance, jobInstance);
                 if (StringUtils.isNotBlank(sql)) {
                     DiReqPacket diPacket = new DiReqPacket();
                     diPacket.setCommandId(org.apex.dataverse.core.util.UCodeUtil.produce());
-                    diPacket.setIncr(false);
+                    if (StringUtils.isNotBlank(tableExtract.getIncrFields())) {
+                        diPacket.setIncr(true);
+                    } else {
+                        diPacket.setIncr(false);
+                    }
                     diPacket.setDriver(DataSourceTypeEnum.getDriverNameByValue(datasource.getDatasourceTypeId()));
                     diPacket.setUser(jdbcSource.getUserName());
                     diPacket.setPassword(jdbcSource.getPassword());
                     diPacket.setQuery(sql);
                     diPacket.setFetchSize(500);
                     diPacket.setNumPartitions((short) 2);
-                    diPacket.setPartitionColumn(null);
-                    diPacket.setLowerBound(null);
-                    diPacket.setUpperBound(null);
+                    if (StringUtils.isNotBlank(tableLoad.getPartitionField())) {
+                        diPacket.setPartitionColumn(tableLoad.getPartitionField());
+                        diPacket.setLowerBound("1");
+                        if (Objects.nonNull(tableLoad.getPartitionMaxRows())) {
+                            diPacket.setUpperBound(tableLoad.getPartitionMaxRows().toString());
+                        } else {
+                            diPacket.setUpperBound(SqlGrammarConst.UPPER_BOUND);
+                        }
+                    } else {
+                        diPacket.setPartitionColumn(null);
+                        diPacket.setLowerBound(null);
+                        diPacket.setUpperBound(null);
+                    }
                     diPacket.setQueryTimeout(50000);
                     diPacket.setUrl(jdbcSource.getJdbcUrl());
                     // 抽取数据放入ts目录下 ts格式yyyyMMdd
@@ -556,16 +578,17 @@ public class DvsAdminJobScheduleHandler {
     }
 
     private JobInstance getJobInstance(NodeJobs nodeJobs) throws DtvsAdminException {
+        LocalDateTime localDateTime = LocalDateTime.now();
         JobInstance jobInstance = mapperFactory.getMapperFacade().map(nodeJobs, JobInstance.class);
         ScheduleNode scheduleNode = scheduleNodeService.getOne(Wrappers.<ScheduleNode>lambdaQuery().eq(ScheduleNode::getNodeCode, nodeJobs.getNodeCode()).eq(ScheduleNode::getEnv, nodeJobs.getEnv()));
         if (Objects.isNull(scheduleNode)) {
             throw new DtvsAdminException("执行任务节点对应的调度节点不存在");
         }
         jobInstance.setNodeId(scheduleNode.getNodeId());
-        jobInstance.setCreateTime(LocalDateTime.now());
-        jobInstance.setStartOffset(DateUtils.localDateTimeToStr(LocalDateTime.now(), DateUtils.DATETIME_TIME_FORMATTER));
+        jobInstance.setCreateTime(localDateTime);
+        jobInstance.setStartOffset(DateUtils.localDateTimeToStr(localDateTime, DateUtils.DATETIME_TIME_FORMATTER));
         jobInstance.setExeStatus(ExeStatusEnum.EXE_DONE.getValue());
-        jobInstance.setJobInstanceCode(UCodeUtil.produce() + "_" + DateUtils.localDateTimeToStr(LocalDateTime.now(), DateUtils.DATETIME_DATE_FORMATTER_YYYYMMDDHHMM));
+        jobInstance.setJobInstanceCode(UCodeUtil.produce() + "_" + DateUtils.localDateTimeToStr(localDateTime, DateUtils.DATETIME_DATE_FORMATTER_YYYYMMDDHHMM));
         return jobInstance;
     }
 
@@ -589,7 +612,7 @@ public class DvsAdminJobScheduleHandler {
         }
     }
 
-    private String getEtlJobSql(TableExtract tableExtract, TableLoad tableLoad, List<TableTransform> tableTransforms) {
+    private String getEtlJobSql(TableExtract tableExtract, TableLoad tableLoad, List<TableTransform> tableTransforms, JobInstance latestJobInstance, JobInstance jobInstance) {
         StringBuilder sql = new StringBuilder();
         if (Objects.nonNull(tableExtract) && Objects.nonNull(tableLoad) && CollectionUtil.isNotEmpty(tableTransforms)) {
             sql.append(SqlGrammarConst.SELECT);
@@ -604,6 +627,22 @@ public class DvsAdminJobScheduleHandler {
             }
             sql.append(SqlGrammarConst.FROM);
             sql.append(tableExtract.getOriginTableName());
+            // 增量抽取数据
+            if (StringUtils.isNotBlank(tableExtract.getIncrFields()) && Objects.nonNull(latestJobInstance)) {
+                sql.append(SqlGrammarConst.WHERE);
+                String incrStartTime = latestJobInstance.getStartOffset();
+                String incrEndTime = jobInstance.getStartOffset();
+                String[] incrFields = tableExtract.getIncrFields().split(SqlGrammarConst.COMMA_WITHOUT_BLANK);
+                int j = 0;
+                for (String incrField : incrFields) {
+                    j++;
+                    sql.append(incrField).append(SqlGrammarConst.BETWEEN).append(incrStartTime).append(SqlGrammarConst.AND).append(incrEndTime);
+                    if (j != incrFields.length) {
+                        sql.append(SqlGrammarConst.AND);
+                    }
+                }
+
+            }
         }
 
         return sql.toString();

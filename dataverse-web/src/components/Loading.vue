@@ -3,6 +3,7 @@
 
 <template>
   <div class="app-loading">
+    <div class="space"></div>
     <svg class="editorial" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
       viewBox="0 24 150 28" preserveAspectRatio="none">
       <defs>
@@ -73,23 +74,26 @@ html[data-theme='dark'] .app-loading {
 }
 
 .app-loading {
+  font-size: 14px;
   background-color: #000;
   margin: 0;
   height: 100vh;
   overflow: hidden;
-  padding: 20% 0 0 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
 }
 
-.content {
+.space {
   flex: 1;
-  font-family: sans-serif;
+}
+
+.content {
+  font-family: 'Lato', sans-serif;
   text-align: center;
   background-color: #3c6df0;
   text-align: center;
-  height: 60vh;
-  margin: -0.1em 0 0 0;
+  height: 30vh;
   padding: 1em;
   color: #eee;
   font-size: 2em;
@@ -101,9 +105,10 @@ html[data-theme='dark'] .app-loading {
 }
 
 .content h1 {
-  margin-top: -0.8em;
+  transform: translateY(-1em);
   font-weight: 100;
   font-size: 3em;
+  line-height: 1.4;
   user-select: none;
   cursor: default;
   font-family: unset;

@@ -59,7 +59,7 @@
               }}</a-select-option>
           </a-select>
         </a-form-item>
-        <a-form-item label="引擎类型" name="engineType">
+        <a-form-item label="引擎类型" name="engineType" v-if="form.storageType === 'HDFS'">
           <a-radio-group v-model:value="form.engineType">
             <a-radio :value="item.desc" v-for="(item, i) in engineTypeEnum" :key="i">{{ item.desc }}</a-radio>
           </a-radio-group>
@@ -280,6 +280,7 @@ const readonly = ref<boolean>(false)
 const changeStorageType = (v: string) => {
   form.saveJdbcStorageParam.storageType = v
   form.connType = v === 'HDFS' ? 'ODPC' : 'JDBC'
+  form.engineType = null
 }
 const addStorageFn = () => {
   isEdit.value = false
@@ -377,18 +378,24 @@ const onChange = (current: number, pageSize: number) => {
 </script>
 
 <style scoped lang="less">
-.page-tit{
+.page-tit {
   padding: 10px 20px;
   line-height: 32px;
   border-bottom: 1px solid var(--border-color);
+
   .tit {
     font-size: 16px;
   }
-  .btns{display: flex;}
+
+  .btns {
+    display: flex;
+  }
 }
-.list{
+
+.list {
   padding: 20px 10px;
 }
+
 .storage-list {
 
   .storage-item {

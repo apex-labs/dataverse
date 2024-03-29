@@ -1,20 +1,15 @@
 package org.apex.dataverse.msg;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
- * @version : v1.0
- * @projectName : nexus-dtvs
- * @package : com.apex.dtvs.msg
- * @className : Response
- * @description :
- * @Author : Danny.Huo
- * @createDate : 2023/1/11 14:38
- * @updateUser :
- * @updateDate :
- * @updateRemark :
+ * @version : v0.1.0
+ * @author : Danny.Huo
+ * @date : 2023/1/11 14:38
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class Response<T> extends Message<T> {
 
     public Response () {

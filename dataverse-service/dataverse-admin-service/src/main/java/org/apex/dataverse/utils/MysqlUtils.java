@@ -85,7 +85,6 @@ public class MysqlUtils {
                         if (StringUtils.isNotEmpty(key)) {
                             if (key.toLowerCase().equals("pri")) {
                                 datasourceColumnDTO.setIsPk(IsPkEnum.PK_YES.getValue());
-                                datasourceColumnDTO.setIsIncrement(Boolean.TRUE);
                             } else {
                                 datasourceColumnDTO.setIsPk(IsPkEnum.PK_NO.getValue());
                             }
@@ -97,6 +96,7 @@ public class MysqlUtils {
                         datasourceColumnDTO.setDataTypeName(getDateTypeName(datasourceColumnDTO.getSourceColumnType()));
                         datasourceColumnDTO.setShortDataTypeId(getDateTypeId(datasourceColumnDTO.getSourceColumnType()));
                         datasourceColumnDTO.setShortDataTypeName(getDateTypeName(datasourceColumnDTO.getSourceColumnType()));
+                        // 只有日期类型才作为增量标记字段
                         if (datasourceColumnDTO.getDataTypeName().equals(DataTypeEnum.DATE.getDesc()) ||
                                 datasourceColumnDTO.getDataTypeName().equals(DataTypeEnum.DATETIME.getDesc())) {
                             datasourceColumnDTO.setIsIncrement(Boolean.TRUE);

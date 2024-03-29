@@ -25,13 +25,13 @@ public class DvsParam {
     @ApiModelProperty("数据空间缩写，英文简称")
     private String dvsAbbr;
 
-    @ApiModelProperty("环境模式，1：BASIC、2：DEV、3：TEST、4：PROD")
+    @ApiModelProperty("环境模式，0：BASIC、1：DEV、2：PROD")
     private Integer env;
 
     @ApiModelProperty("数据仓库状态，1：规划中，2：开发中")
     private Integer dvsStatus;
 
-    @ApiModelProperty("0：未完成，1：层之间无隔离（三层同一存储区），2：ODS-CDM无隔离，3：全隔离")
+    @ApiModelProperty("0：未完成，1：层之间无隔离（三层同一存储区），2：ODS-DW无隔离，3：全隔离")
     private Integer layerAtaIsolation;
 
     @ApiModelProperty("数据空间描述")

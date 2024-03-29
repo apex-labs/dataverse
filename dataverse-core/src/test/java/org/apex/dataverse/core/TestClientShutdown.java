@@ -7,16 +7,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @version : v1.0
- * @projectName : nexus-msg
- * @package : com.apex.jms.test
- * @className : TestClientShutdown
- * @description :
- * @Author : Danny.Huo
- * @createDate : 2023/5/11 17:49
- * @updateUser :
- * @updateDate :
- * @updateRemark :
+ * @version : v0.1.0
+ * @author : Danny.Huo
+ * @date : 2023/5/11 17:49
  */
 public class TestClientShutdown {
 

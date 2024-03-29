@@ -198,7 +198,7 @@ let configValue = reactive({
   etlJobTableParamList: [
     {
       tableExtractParam: {
-        env: null, incrType: null, originTableName: null, incrFields: []
+        env: null, incrType: 0, originTableName: null, incrFields: []
       },
       tableTransformParamList: [
       ],
@@ -451,7 +451,7 @@ const changeSource = (data: any) => {
     configValue.etlJobTableParamList = [
       {
         tableExtractParam: {
-          env: null, incrType: null, originTableName: null, incrFields: []
+          env: null, incrType: 0, originTableName: null, incrFields: []
         },
         tableTransformParamList: [
         ],
@@ -517,7 +517,7 @@ const resetInfo = () => {
     etlJobTableParamList: [
       {
         tableExtractParam: {
-          env: null, incrType: null, originTableName: null, incrFields: []
+          env: null, incrType: 0, originTableName: null, incrFields: []
         },
         tableTransformParamList: [
         ],

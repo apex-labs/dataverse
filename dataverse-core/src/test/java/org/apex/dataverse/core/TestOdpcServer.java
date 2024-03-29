@@ -12,15 +12,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * @version : v1.0
- * @projectName : nexus-jms
- * @package : com.apex.jms.test
- * @className : TestCustomJmsServer
- * @description :
- * @Author : Danny.Huo
- * @createDate : 2023/2/14 13:51
- * @updateUser :
- * @updateDate :
- * @updateRemark :
+ * @author : Danny.Huo
+ * @date : 2023/2/14 13:51
  */
 public class TestOdpcServer {
 

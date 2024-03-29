@@ -1,16 +1,9 @@
 package org.apex.dataverse.util;
 
 /**
- * @version : v1.0
- * @projectName : dynamic-rule-engine
- * @package : com.chinapex.fdre.util
- * @className : StringUtil
- * @description :
- * @Author : Danny.Huo
- * @createDate : 2022/10/14 10:30
- * @updateUser :
- * @updateDate :
- * @updateRemark :
+ * @version : v0.1.0
+ * @author : Danny.Huo
+ * @date : 2022/10/14 10:30
  */
 public class StringUtil {
 

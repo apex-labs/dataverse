@@ -58,7 +58,7 @@ public class BdmJobController {
     @PostMapping("/editBdmJob")
     @ApiOperation("编辑数据开发接口")
     @ApiImplicitParams({@ApiImplicitParam(value = "编辑数据开发请求参数", dataTypeClass = BdmJobParam.class)})
-    public ResultVO<Long> editBdmJob(@RequestBody BdmJobParam pageBdmJobParam) throws DtvsAdminException, SqlParseException {
+    public ResultVO<Long> editBdmJob(@RequestBody BdmJobParam pageBdmJobParam) throws DtvsAdminException, SqlParseException, NoPortNodeException, InterruptedException, PortConnectionException, JsonProcessingException, InvalidConnException, InvalidCmdException {
         return ResultVO.success(bdmJobService.editBdmJob(pageBdmJobParam));
     }
 

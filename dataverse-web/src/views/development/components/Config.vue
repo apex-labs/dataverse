@@ -39,8 +39,10 @@
                   <a-form-item label="表源" :name="['etlJobTableParamList', i, 'tableExtractParam', 'originTableName']"
                     :rules="rules.originTableName">
                     <a-select v-model:value="item.tableExtractParam.originTableName" show-search placeholder="请选择"
-                      @change="(v: any) => changeTableName(v, i)">
-                      <a-select-option :value="item.tableName" v-for="item in tableData" :key="item.tableName">
+                      @change="(v: any) => changeTableName(v, i)"
+                      @focus="() => setTableDisable(item.tableExtractParam.originTableName, i)">
+                      <a-select-option :value="item.tableName" v-for="item in tableData" :key="item.tableName"
+                        :disabled="item.disabled">
                         {{ item.tableName }}
                       </a-select-option>
                     </a-select>
@@ -48,12 +50,16 @@
                   <a-form-item label="增量标记字段" :name="['etlJobTableParamList', i, 'tableExtractParam', 'incrFields']">
                     <a-select v-model:value="item.tableExtractParam.incrFields" mode="multiple" show-search
                       placeholder="请选择" allowClear :max-tag-count="2" @change="(v: any) => changeColumnName(v, i)"
-                      @focus="() => changeTableName(item.tableExtractParam.originTableName, i)">
+                      @focus="() => changeTableName(item.tableExtractParam.originTableName, i, false)">
                       <a-select-option :value="item.columnName" v-for="item in markColumnData" :key="item.columnName"
                         :disabled="item.disabled">
                         {{ item.columnName }}
                       </a-select-option>
                     </a-select>
+                    <a-tooltip overlayClassName="fs12">
+                      <template #title>可选项1到多个标识字段，用来按日期进行增量抽取，一般为表中的创建时间和更新时间字段。也可不选，不选增量标识字段时，按全量抽取。</template>
+                      <QuestionCircleOutlined class="tip" />
+                    </a-tooltip>
                   </a-form-item>
                 </div>
                 <div class="arrow flex aic">
@@ -84,7 +90,7 @@
                     <a-form-item class="flex1" label="主键"
                       :name="['etlJobTableParamList', i, 'tableLoadParam', 'pkField']">
                       <a-select v-model:value="item.tableLoadParam.pkField" show-search placeholder="请选择" allowClear
-                        @focus="() => changeTableName(item.tableExtractParam.originTableName, i)">
+                        @focus="() => changeTableName(item.tableExtractParam.originTableName, i, false)">
                         <a-select-option :value="it.columnName" v-for="(it) in pkColumnData" :key="it.columnName">
                           {{ it.columnName }}
                         </a-select-option>
@@ -233,7 +239,7 @@ const getTableList = () => {
     }
     tableListByType(params).then((res: any) => {
       if (res.responseStatus === 200) {
-        tableData.value = res.data || []
+        tableData.value = (res.data || []).map((e: any) => ({ ...e, disabled: false }))
       }
     })
   }
@@ -269,17 +275,41 @@ const getColumnList = async (tableName: any) => {
     }
   })
 }
-const changeTableName = async (v: any, i: number) => {
+const setTableDisable = (v: any, i: number) => {
+  const excludeList = configValue.value.etlJobTableParamList.filter((e: any, j: number) => i !== j).map((e: any) => e.tableExtractParam.originTableName)
+  tableData.value = tableData.value.map((e: any) => ({ ...e, disabled: excludeList.includes(e.tableName) }))
+}
+const changeTableName = async (v: any, i: number, isNeedReset: boolean = true) => {
   await getColumnList(v)
   currentTableIndex.value = i
+  // reset
+  if (isNeedReset) {
+    configValue.value.etlJobTableParamList[i] =
+    {
+      tableExtractParam: {
+        env: null, incrType: 0, originTableName: v, incrFields: []
+      },
+      tableTransformParamList: [
+      ],
+      tableLoadParam: {
+        addonBefore: 'ods_',
+        env: null,
+        pkField: '',
+        tableName: '',
+        partitionField: '',
+        partitionMaxRows: null,
+        visible: false
+      },
+      dvsTableParam: { createMode: 2, isStream: 0, dwLayer: 1, dwLayerDetail: 11, env: 0, tableName: '', tableAlias: '' },
+    }
+  }
   configValue.value.etlJobTableParamList[i].tableTransformParamList = columnData.value.map(({ columnName, dateTypeId, dataTypeName, isPk, shortDataTypeId, tableName }: any) => ({ env: env.value, inColumn: columnName, inDataTypeId: dateTypeId, inDataTypeName: dataTypeName, transform: '', outColumn: columnName, outDataTypeId: dateTypeId, outDataTypeName: dataTypeName, isPrimaryKey: isPk, shortDataTypeId, tableName }))
 }
 const changeColumnName = (v: any, i: number) => {
   const column: any = columnData.value.filter((e: any) => v.includes(e.columnName))
-  columnData.value = columnData.value.map((e: any) => ({ ...e, disabled: e.dateTypeId !== column[0].dateTypeId }))
   // incrType：0：非增量抽取，1：日期增量，2：数值增量
   // dataTypeId：1:字符串 2:整形 3:浮点 4:日期 5:日期时间 6:长整形 7:时间戳 8:小整数 9:布尔
-  configValue.value.etlJobTableParamList[i].tableExtractParam.incrType = [2, 3].includes(column[0].shortDataTypeId) ? 2 : [4, 5].includes(column[0].shortDataTypeId) ? 1 : 0
+  configValue.value.etlJobTableParamList[i].tableExtractParam.incrType = [4, 5].includes(column[0]?.shortDataTypeId) ? 1 : 0
 }
 
 const datasourceName = computed(() => {
@@ -326,7 +356,7 @@ const rules: Record<string, Rule[]> = {
 const configItem = reactive({
   tableExtractParam: {
     env: null,
-    incrType: null,
+    incrType: 0,
     originTableName: null,
     incrFields: []
   },
@@ -483,6 +513,14 @@ onBeforeUnmount(() => {
 
     :deep(.ant-form-item) {
       margin-bottom: 10px;
+      position: relative;
+
+      .tip {
+        position: absolute;
+        left: 100%;
+        top: 8px;
+        margin-left: 5px;
+      }
 
       .ant-form-item {
         margin-bottom: 0;
@@ -524,6 +562,7 @@ onBeforeUnmount(() => {
         color: var(--text-color-1);
       }
     }
+
   }
 }
 </style>

@@ -200,4 +200,6 @@ public class SqlGrammarConst {
 
     public static final String SELECT_WITH_BLANK_LOWER = "select";
 
+    public static final String UPPER_BOUND = "300000";
+
 }

@@ -3,16 +3,9 @@ package org.apex.dataverse.msg;
 import lombok.Data;
 
 /**
- * @version : v1.0
- * @projectName : nexus-dtvs
- * @package : com.apex.dtvs.msg
- * @className : Message
- * @description :
- * @Author : Danny.Huo
- * @createDate : 2023/1/11 14:41
- * @updateUser :
- * @updateDate :
- * @updateRemark :
+ * @version : v0.1.0
+ * @author : Danny.Huo
+ * @date : 2023/1/11 14:41
  */
 @Data
 public class Message<T> {

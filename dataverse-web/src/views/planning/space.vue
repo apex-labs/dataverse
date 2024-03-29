@@ -338,11 +338,11 @@ const checkName = async (_rule: Rule, value: string) => {
   if (!value) {
     return Promise.reject('请填写数据空间名称')
   }
-  const reg = /^[a-zA-Z]\w{0,49}$/
+  const reg = /^[a-zA-Z]\w{0,45}$/
   if (reg.test(value)) {
     return Promise.resolve()
   } else {
-    return Promise.reject('以英文开头，由数字、英文或者下划线组成的字符串，且长度在50以内')
+    return Promise.reject('以英文开头，由数字、英文或者下划线组成的字符串，且长度在46以内')
   }
 }
 const checkAlias = async (_rule: Rule, value: string) => {
@@ -359,11 +359,11 @@ const checkAbbr = async (_rule: Rule, value: string) => {
   if (!value) {
     return Promise.reject('请填写数据空间简称')
   }
-  const reg = /^[a-zA-Z]\w{0,19}$/
+  const reg = /^[a-zA-Z]\w{0,15}$/
   if (reg.test(value)) {
     return Promise.resolve()
   } else {
-    return Promise.reject('以英文开头，由数字、英文或者下划线组成的字符串，且长度在20以内')
+    return Promise.reject('以英文开头，由数字、英文或者下划线组成的字符串，且长度在16以内')
   }
 }
 const rules: Record<string, Rule[]> = {
@@ -522,7 +522,7 @@ const submitFn = () => {
   action(params)
     .then((res: any) => {
       if (res.responseStatus === 200) {
-        open.value = false
+        onClose()
         getSpaceList()
       } else {
         message.error(res.errorMsg)
@@ -538,9 +538,9 @@ const initParams = () => {
   const dvsParamList: any[] = []
   // envMode--环境模式，1：BASIC、2：DEV-PROD
   const envList = envMode === 1 ? [0] : [1, 2]   // 0：BASIC、1:DEV、2：PROD
-  envList.forEach((env) => {
+  envList.forEach((env: number) => {
     const item = {
-      description, dvsAbbr: parentAbbr, dvsAlias: parentAlias, dvsCode, dvsName: parentName, dvsId: parentId, env, multStorage
+      description, dvsAbbr: parentAbbr + (env === 1 ? '_dev' : ''), dvsAlias: parentAlias, dvsCode, dvsName: parentName + (env === 1 ? '_dev' : ''), dvsId: parentId, env, multStorage
     }
     dvsParamList.push(item)
   })
@@ -660,7 +660,10 @@ const onOkUser = () => {
   .tit {
     font-size: 16px;
   }
-  .btns{display: flex;}
+
+  .btns {
+    display: flex;
+  }
 }
 
 .block-c {
@@ -724,7 +727,6 @@ const onOkUser = () => {
           }
 
           .dev {
-            border-bottom: 1px solid @color-dev;
 
             .text {
               border-bottom: 2px solid @color-dev;
@@ -732,10 +734,9 @@ const onOkUser = () => {
           }
 
           .prod {
-            border-bottom: 1px solid @color-prod;
 
             .text {
-              border-bottom: 1px solid @color-prod;
+              border-bottom: 2px solid @color-prod;
             }
           }
         }

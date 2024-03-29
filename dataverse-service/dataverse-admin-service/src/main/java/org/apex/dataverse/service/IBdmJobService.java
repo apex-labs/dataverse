@@ -47,7 +47,7 @@ public interface IBdmJobService extends IService<BdmJob> {
      * @param editBdmJobParam
      * @return
      */
-    Long editBdmJob(BdmJobParam editBdmJobParam) throws DtvsAdminException, SqlParseException;
+    Long editBdmJob(BdmJobParam editBdmJobParam) throws DtvsAdminException, SqlParseException, NoPortNodeException, InterruptedException, PortConnectionException, JsonProcessingException, InvalidConnException, InvalidCmdException;
 
 //    /**
 //     * 通过数据开发分组code展示数据集成列表树

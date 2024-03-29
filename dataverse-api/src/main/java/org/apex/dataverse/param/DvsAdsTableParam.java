@@ -17,9 +17,6 @@ public class DvsAdsTableParam {
     @ApiModelProperty("租户ID")
     private Long tenantId;
 
-    @ApiModelProperty("数据空间编码集合")
-    private List<String> dvsCodeList;
-
-    @ApiModelProperty("环境模式, 1:DEV, 2:PROD")
-    private Integer env;
+    @ApiModelProperty("数据空间特定环境下参数")
+    private List<DvsEnvParam> dvsEnvParamList;
 }

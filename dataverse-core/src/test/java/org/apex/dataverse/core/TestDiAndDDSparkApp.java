@@ -23,16 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @version : v1.0
- * @projectName : nexus-msg
- * @package : org.apex.dataverse.core.test
- * @className : TestDiSparkApp
- * @description :
- * @Author : Danny.Huo
- * @createDate : 2023/4/23 20:18
- * @updateUser :
- * @updateDate :
- * @updateRemark :
+ * @version : v0.1.0
+ * @author : Danny.Huo
+ * @date : 2023/4/23 20:18
  */
 public class TestDiAndDDSparkApp {
 
@@ -89,9 +82,9 @@ public class TestDiAndDDSparkApp {
         diPacket.setName("Danny 抽数");
         diPacket.setDriver("com.mysql.jdbc.Driver");
         diPacket.setQuery("select * from a_user limit 20000");
-        diPacket.setUrl("jdbc:mysql://10.25.19.1:3306/ecommerce_min?useUnicode=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8&allowMultiQueries=true&useCursorFetch=true&serverTimezone=Asia/Shanghai");
+        diPacket.setUrl("jdbc:mysql://?:3306/ecommerce_min?useUnicode=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8&allowMultiQueries=true&useCursorFetch=true&serverTimezone=Asia/Shanghai");
         diPacket.setUser("dev");
-        diPacket.setPassword("123456");
+        diPacket.setPassword("?");
         diPacket.setOutput(HdfsOutput.newOutput("/tmp/datavs/test/a_user/20230425"));
 
         request.setPacket(diPacket);
@@ -112,9 +105,9 @@ public class TestDiAndDDSparkApp {
         diPacket.setName("Danny 抽数");
         diPacket.setDriver("com.mysql.jdbc.Driver");
         diPacket.setQuery("select * from a_order limit 20000");
-        diPacket.setUrl("jdbc:mysql://10.25.19.1:3306/ecommerce_min?useUnicode=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8&allowMultiQueries=true&useCursorFetch=true&serverTimezone=Asia/Shanghai");
+        diPacket.setUrl("jdbc:mysql://?:3306/ecommerce_min?useUnicode=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=UTF-8&characterSetResults=UTF-8&allowMultiQueries=true&useCursorFetch=true&serverTimezone=Asia/Shanghai");
         diPacket.setUser("dev");
-        diPacket.setPassword("123456");
+        diPacket.setPassword("?");
         diPacket.setOutput(HdfsOutput.newOutput("/tmp/Dvs/test/a_order/20230425"));
 
         request.setPacket(diPacket);

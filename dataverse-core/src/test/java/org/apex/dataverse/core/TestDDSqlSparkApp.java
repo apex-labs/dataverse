@@ -20,16 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @version : v1.0
- * @projectName : nexus-msg
- * @package : com.apex.jms.test
- * @className : TestDiSparkApp
- * @description :
- * @Author : Danny.Huo
- * @createDate : 2023/4/23 20:18
- * @updateUser :
- * @updateDate :
- * @updateRemark :
+ * @version : v0.1.0
+ * @author : Danny.Huo
+ * @date : 2023/4/23 20:18
  */
 public class TestDDSqlSparkApp {
 

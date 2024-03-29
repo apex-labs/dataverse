@@ -4,16 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * @version : v1.0
- * @projectName : dynamic-rule-engine
- * @package : com.chinapex.fdre.util
- * @className : ObjectMapperUtil
- * @description :
- * @Author : Danny.Huo
- * @createDate : 2022/11/24 11:06
- * @updateUser :
- * @updateDate :
- * @updateRemark :
+ * @version : v0.1.0
+ * @author : Danny.Huo
+ * @date : 2022/11/24 11:06
  */
 public class ObjectMapperUtil {
 

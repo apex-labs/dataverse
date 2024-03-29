@@ -207,41 +207,51 @@ const onFinishFailed = (errorInfo: any) => {
 }
 
 @media screen and (max-width: 1024px) {
-  .index{
+  .index {
     background: #000 url('@/assets/imgs/bg_login_m.png') 50% 50%/cover no-repeat;
     align-items: center;
     justify-content: center;
-    .info{display: none;}
-    .login{
-      width:60%;
+
+    .info {
+      display: none;
+    }
+
+    .login {
+      width: 60%;
       min-width: 300px;
       padding: 0;
-      background:transparent;
+      background: transparent;
+
       // .tit{font-size: 48px;}
       // .ftit{font-size: 30px;}
-      .footer{
-        transform: translate(-50%,20px);
+      .footer {
+        transform: translate(-50%, 20px);
       }
-      :deep(.ant-input){
-        background:rgba(30,30,30,.8) !important;
-        border-color:#000 !important;
+
+      :deep(.ant-input) {
+        background: rgba(30, 30, 30, .8) !important;
+        border-color: #000 !important;
         padding: 8px 11px !important;
       }
-      .ant-input-affix-wrapper{
-        background:rgba(30,30,30,.8) !important;
-        border-color:#000 !important;
-        padding:0 11px!important;
-        :deep(.ant-input){
+
+      .ant-input-affix-wrapper {
+        background: rgba(30, 30, 30, .8) !important;
+        border-color: #000 !important;
+        padding: 0 11px !important;
+
+        :deep(.ant-input) {
           background-color: transparent !important;
-          border-color:transparent !important;
+          border-color: transparent !important;
           padding: 8px 0 !important;
         }
       }
-      :deep(.ant-checkbox .ant-checkbox-inner){
-        background:rgba(30,30,30,.8) !important;
+
+      :deep(.ant-checkbox .ant-checkbox-inner) {
+        background: rgba(30, 30, 30, .8) !important;
       }
-      .btn{
-        background: linear-gradient( 90deg, #5B63E9 0%, #5B63E9 30%, #681E92 100%) !important;
+
+      .btn {
+        background: linear-gradient(90deg, #5B63E9 0%, #5B63E9 30%, #681E92 100%) !important;
         border-radius: 20px;
         border: none;
       }

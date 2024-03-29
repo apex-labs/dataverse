@@ -24,6 +24,9 @@
         <!-- <div class="page-title">调度任务</div> -->
         <div class="filter fxbw">
           <a-form :model="query" name="horizontal_login" layout="inline" autocomplete="off">
+            <a-form-item label="任务名称">
+              <a-input v-model:value="query.scheduleName" v-trim placeholder="请输入"> </a-input>
+            </a-form-item>
             <a-form-item label="任务状态">
               <a-select v-model:value="query.scheduleLifecycle" placeholder="请选择" style="width:150px" allowClear>
                 <a-select-option :value="k" v-for="(v, k) in lifecycleEnum" :key="k">
@@ -37,9 +40,6 @@
                   {{ v }}
                 </a-select-option>
               </a-select>
-            </a-form-item>
-            <a-form-item label="搜索关键字">
-              <a-input v-model:value="query.scheduleName" v-trim placeholder="请输入"> </a-input>
             </a-form-item>
 
             <a-form-item>

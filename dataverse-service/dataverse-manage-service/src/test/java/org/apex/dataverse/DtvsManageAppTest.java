@@ -4,15 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apex.dataverse.dao.StorageDAO;
 import org.apex.dataverse.exception.DtvsManageException;
-import org.apex.dataverse.param.SaveJdbcStorageParam;
-import org.apex.dataverse.param.SaveOdpcStorageParam;
-import org.apex.dataverse.param.SaveStorageParam;
+import org.apex.dataverse.feign.admin.AdminFeignClient;
+import org.apex.dataverse.param.*;
 import org.apex.dataverse.port.entity.DvsPort;
 import org.apex.dataverse.port.service.IDvsPortService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName: DtvsManageAppTest
@@ -30,6 +31,9 @@ public class DtvsManageAppTest extends AppTest{
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private AdminFeignClient adminFeignClient;
 
     @Test
     public void saveDvsPort() {
@@ -69,6 +73,20 @@ public class DtvsManageAppTest extends AppTest{
         saveStorageParam.setSaveOdpcStorageParam(saveOdpcStorageParam);
         SaveJdbcStorageParam saveJdbcStorageParam = new SaveJdbcStorageParam();
         System.out.println(storageDAO.add(saveStorageParam));
+    }
+
+    @Test
+    public void adminFeignClient() throws JsonProcessingException {
+        DvsAdsTableParam dvsAdsTableParam = new DvsAdsTableParam();
+        dvsAdsTableParam.setTenantId(1L);
+        List<DvsEnvParam> dvsEnvParamList = new ArrayList<>();
+        DvsEnvParam dvsEnvParam = new DvsEnvParam();
+        dvsEnvParam.setDvsCode("241yijx4");
+        dvsEnvParam.setEnv(0);
+        dvsEnvParamList.add(dvsEnvParam);
+        dvsAdsTableParam.setDvsEnvParamList(dvsEnvParamList);
+        System.out.println(objectMapper.writeValueAsString(adminFeignClient.listDvsAdsTable(dvsAdsTableParam)));
+
     }
 
 
